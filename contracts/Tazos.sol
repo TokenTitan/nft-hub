@@ -28,10 +28,6 @@ contract Tazos is
     bytes32 public constant PAUSER_ROLE =
         0x65d7a28e3265b37a6474929f336521b332c1681b933f6cb9f3376673440d862a;
 
-    mapping(uint64 => address) public amms;
-
-    event AmmAddressSet(uint64 _ammId, address _ammAddress);
-
     function initialize(string memory uri) public initializer {
         __Tazos_init(uri);
     }
@@ -61,7 +57,7 @@ contract Tazos is
     }
 
     /**
-     * @notice burns ERC1155 LP tokens
+     * @notice burns tokens
      * @param account the address of the user
      * @param id the id of the token
      * @param value the amount to be burned
@@ -72,40 +68,30 @@ contract Tazos is
         uint256 value
     ) external {
         require(
-            msg.sender == amms[uint64(id >> 192)] ||
-                account == _msgSender() ||
-                isApprovedForAll(account, _msgSender()),
-            "Tazos: caller is not owner nor approved"
+            hasRole(MINTER_ROLE, _msgSender()),
+            "Tazos: must have minter role to burn"
         );
+
         _burn(account, id, value);
     }
 
     /**
-     * @notice mints ERC1155 LP tokens
+     * @notice mints tokens
      * @param to the address of the user
-     * @param _ammId the id of the AMM
-     * @param _periodIndex the current period value
-     * @param _pairId the index of the pair
+     * @param id the current period value
      * @param amount units of token to mint
-     * @return id for the LP Token
      */
     function mint(
         address to,
-        uint64 _ammId,
-        uint64 _periodIndex,
-        uint32 _pairId,
+        uint256 id,
         uint256 amount,
         bytes memory data
-    ) external returns (uint256 id) {
+    ) external {
         require(
             hasRole(MINTER_ROLE, _msgSender()),
             "Tazos: must have minter role to mint"
         );
 
-        id = _createId(_ammId, _periodIndex, _pairId);
-        if (amms[_ammId] == address(0)) {
-            amms[_ammId] = msg.sender;
-        }
         _mint(to, id, amount, data);
     }
 
@@ -122,83 +108,6 @@ contract Tazos is
             "Tazos: must have pauser role to unpause"
         );
         paused() ? _unpause() : _pause();
-    }
-
-    /**
-     * @notice Getter for predicted Token ID
-     * @param _ammId the id of the AMM
-     * @param _periodIndex the current period value
-     * @param _pairId the index of the pair
-     * @return id for the LP Token
-     */
-    function predictTokenId(
-        uint256 _ammId,
-        uint256 _periodIndex,
-        uint256 _pairId
-    ) external pure returns (uint256) {
-        return _createId(_ammId, _periodIndex, _pairId);
-    }
-
-    /**
-     * @notice Setter for AMM address
-     * @param _ammId the id of the amm
-     * @param _ammAddress the address of the amm
-     */
-    function setAmmAddress(uint64 _ammId, address _ammAddress) external {
-        require(
-            hasRole(DEFAULT_ADMIN_ROLE, _msgSender()),
-            "Tazos: must have default admin role to set amm address"
-        );
-        amms[_ammId] = _ammAddress;
-        emit AmmAddressSet(_ammId, _ammAddress);
-    }
-
-    /**
-     * @notice Getter for AMM id
-     * @param _id the id of the LP Token
-     * @return AMM id
-     */
-    function getAMMId(uint256 _id) external pure returns (uint64) {
-        return uint64(_id >> 192);
-    }
-
-    /**
-     * @notice Getter for PeriodIndex
-     * @param _id the id of the LP Token
-     * @return period index
-     */
-    function getPeriodIndex(uint256 _id) external pure returns (uint64) {
-        return uint64(_id >> 128) & MAX_INT_64;
-    }
-
-    /**
-     * @notice Getter for PairId
-     * @param _id the index of the Pair
-     * @return pair index
-     */
-    function getPairId(uint256 _id) external pure returns (uint32) {
-        return uint32(_id >> 96) & MAX_INT_32;
-    }
-
-    /**
-     * AMM -> first 64 bits
-     * PeriodIndex -> next 64 bits
-     * PairIndex -> next 32 bits
-     * Reserved(for future use cases) -> last 96 bits
-     * ----------------------------
-     * Total -> 256 bits
-     * @notice Creates ID for the LP token
-     * @param _ammId the id of the AMM
-     * @param _periodIndex the current period value
-     * @param _pairId the index of the pair
-     * @return id for the LP Token
-     */
-    function _createId(
-        uint256 _ammId,
-        uint256 _periodIndex,
-        uint256 _pairId
-    ) private pure returns (uint256) {
-        return (_ammId << 192) | (_periodIndex << 128) | (_pairId << 96);
     }
 
     function supportsInterface(bytes4 interfaceId)
