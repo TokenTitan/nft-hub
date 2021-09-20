@@ -2,5 +2,17 @@
 
 Layer-2 scaled NFT trading and staking platform
 
-Marketplace deployed to: 0xC9e07c4943Abe5f138a11Dae3d3f2EC44872E9EB from account: 0xbc741Cc2bD5a40B93f3EDdb60805D811c310398B
-Asset deployed to: 0xAeBbA73ED6e3722045eC54bd86e518709265f1f1 from account: 0xbc741Cc2bD5a40B93f3EDdb60805D811c310398B
+From account 0xbc741Cc2bD5a40B93f3EDdb60805D811c310398B
+
+Rinkeby:
+Marketplace deployed to: 0x72Ae25FB6c12E59CC7Ef5aF0264B3752C3b64bD4
+Asset deployed to: 0x3850b6a795F9C5E30045CA7816727cA1D8B26389
+Tazos deployed to: 0x6b70Ec81332BA728b692f2c9061CAc6CC9D7b345
+Staging Arena deployed to: 0x4470DA6d9fd5dda3295A45ac77CfC4a482F0cea0
+
+Arbitrum:
+Marketplace deployed to: 0x1fecaCa1Bf91cB43EE7C2325dd7cF31334c87eAb
+Asset deployed to: 0xC9e07c4943Abe5f138a11Dae3d3f2EC44872E9EB
+Tazos deployed to: 0xAeBbA73ED6e3722045eC54bd86e518709265f1f1
+Staging Arena deployed to: 0x5b5DCbB251fFFF571b13C45E82316dA8f623bC14
+

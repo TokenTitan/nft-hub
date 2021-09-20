@@ -8,15 +8,15 @@ import "@openzeppelin/contracts-upgradeable/token/ERC1155/utils/ERC1155HolderUpg
 
 import "./interfaces/ITazos.sol";
 
-contract stakingArena is ERC1155HolderUpgradeable, AccessControlUpgradeable {
+contract StakingArena is ERC1155HolderUpgradeable, AccessControlUpgradeable {
     using SafeMathUpgradeable for uint256;
 
     // keccak256("DEFAULT_ADMIN_ROLE");
     bytes32 internal constant ADMIN_ROLE =
         0x1effbbff9c66c5e59634f24fe842750c60d18891155c32dd155fc2d661a4c86d;
-    uint256 UNIT = 10**18;
-    uint256 constant PERIOD_DURATION = 30 days;
-    uint256 constant REWARD_PER_PERIOD = 1;
+    uint256 constant public UNIT = 10**18;
+    uint256 constant public PERIOD_DURATION = 30 days;
+    uint256 constant public REWARD_PER_PERIOD = 1;
 
     uint8 public counter;
     uint256 public totalAllocPoint;
