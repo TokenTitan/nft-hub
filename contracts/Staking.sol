@@ -4,11 +4,10 @@ pragma solidity 0.8.0;
 
 import "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/utils/math/SafeMathUpgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/token/ERC1155/utils/ERC1155HolderUpgradeable.sol";
 
 import "./interfaces/ITazos.sol";
 
-contract stakingArena is ERC1155HolderUpgradeable, AccessControlUpgradeable {
+contract stakingArena is AccessControlUpgradeable {
     using SafeMathUpgradeable for uint256;
 
     // keccak256("DEFAULT_ADMIN_ROLE");
@@ -122,15 +121,5 @@ contract stakingArena is ERC1155HolderUpgradeable, AccessControlUpgradeable {
     function _issueReward(uint256 _noOfPeriods, uint8 _pid) internal {
         uint256 rewardAmount = (_noOfPeriods * REWARD_PER_PERIOD);
         tazos.mint(_msgSender(), _pid, rewardAmount, bytes(""));
-    }
-
-    function supportsInterface(bytes4 interfaceId)
-        public
-        view
-        virtual
-        override(ERC1155ReceiverUpgradeable, AccessControlUpgradeable)
-        returns (bool)
-    {
-        return super.supportsInterface(interfaceId);
     }
 }

@@ -33,7 +33,7 @@ contract Asset is ERC1155Upgradeable, AccessControlUpgradeable {
         address _user,
         uint256 _amount,
         bytes memory _data
-    ) external onlyAdmin returns (uint256) {
+    ) external returns (uint256) {
         counter++;
         _mint(_user, counter, _amount, _data);
         emit ItemForged(counter);
